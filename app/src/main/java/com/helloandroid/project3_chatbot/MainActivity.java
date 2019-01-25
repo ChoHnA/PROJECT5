@@ -14,12 +14,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +41,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,6 +69,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
+import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.view.PieChartView;
+
 public class MainActivity extends AppCompatActivity {
 
     String time,menu;
@@ -83,10 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
     String photopath;
     private String dailyMoney = "10000";
+    private int dailyintMoney = 0;
     private String title, type, money, date;
     //private int intmoney, icon;
 
-    private TextView textView;
+    private TextView textView, textView3, textView4;
     private ListView listView;
     private ImageView imageView;
     private ImageView button;
@@ -95,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private String date2;
 
     ListViewAdapter adapter;
+    //PieChartView pieChartView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +116,16 @@ public class MainActivity extends AppCompatActivity {
         openDatabase(databasename);
 
         textView = (TextView) findViewById(R.id.textView);
+        textView3 = (TextView) findViewById(R.id.textView3);
+        textView4 = (TextView) findViewById(R.id.textView4);
         imageView = (ImageView) findViewById(R.id.imageView);
         listView = (ListView) findViewById(R.id.listView);
         button = (ImageView) findViewById(R.id.button);
+        //pieChartView = findViewById(R.id.chart);
+
+        //앱 재실행했을 때 유지할 데이터
+        SharedPreferences prefs = getSharedPreferences("pref", MODE_PRIVATE);
+        dailyintMoney = prefs.getInt("dailyintmoney", 10000);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -358,17 +374,23 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //정수만 입력하도록
                         dailyMoney = edittext.getText().toString();
+                        dailyintMoney = Integer.parseInt(dailyMoney);
+                        SharedPreferences prefs = getSharedPreferences("pref", MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("dailymoney",dailyMoney);
+                        editor.putInt("dailyintmoney",dailyintMoney);
                         editor.commit();
                     }
                 });
         builder.setNegativeButton("취소",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dailyintMoney = Integer.parseInt(dailyMoney);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("dailyintmoney",dailyintMoney);
+                        editor.commit();
                     }
                 });
+
         builder.show();
     }
 
@@ -477,6 +499,8 @@ public class MainActivity extends AppCompatActivity {
 
         textView.setText(dateNew);
 
+        int spendMoney = 0;
+
         if (cursor.getCount()==0){
             adapter = new ListViewAdapter();
             listView.setAdapter(adapter);
@@ -498,6 +522,8 @@ public class MainActivity extends AppCompatActivity {
                 int icon=R.drawable.question;
                 Log.d(type, "타입 생성됨.");
 
+                spendMoney = spendMoney + Integer.parseInt(money);
+
                 if (type.equals("교통")) {
                     icon = R.drawable.bus;
                 } else if (type.equals("식비")) {
@@ -515,6 +541,9 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         }
+
+        textView3.setText(String.valueOf(spendMoney));
+        textView4.setText(String.valueOf(dailyintMoney-spendMoney));
     }
 
     private void selectData(String tableName) {
