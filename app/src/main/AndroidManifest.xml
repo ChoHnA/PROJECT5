@@ -25,6 +25,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ReviseActivity"></activity>
         <activity
             android:name=".ImageSearchActivity"
             android:screenOrientation="portrait"

@@ -32,10 +32,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -74,20 +78,23 @@ public class MainActivity extends AppCompatActivity {
     private int Year,Month,Day;
     public SharedPreferences prefs;
     private SQLiteDatabase database;
-    private String databasename = "MoneyDB";
+    private String databasename = "MyPiggyBank";
     private String tablename = "MoneyTable";
 
     String photopath;
-    private String endword;
-    private String title, type;
-    private int money;
+    private String dailyMoney = "10000";
+    private String title, type, money, date;
+    //private int intmoney, icon;
 
     private TextView textView;
     private ListView listView;
     private ImageView imageView;
-    private TextView button, button2;
+    private ImageView button;
     private int hour,minute;
+    private CalendarDay today;
+    private String date2;
 
+    ListViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +109,17 @@ public class MainActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         imageView = (ImageView) findViewById(R.id.imageView);
         listView = (ListView) findViewById(R.id.listView);
-        button = (TextView) findViewById(R.id.button);
-        button2 = (TextView) findViewById(R.id.button2);
+        button = (ImageView) findViewById(R.id.button);
 
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/MyPhotoDiary");
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //클릭 시 편집/삭제
+                show(position);
+            }
+        });
+
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/MyPiggyBank");
         photopath = path.getPath();
         Log.e("file",photopath);
 
@@ -118,12 +132,30 @@ public class MainActivity extends AppCompatActivity {
         prefs = getSharedPreferences("data",Activity.MODE_PRIVATE);
         username = prefs.getString("username",null);
         if (username != null){
-            setTitle(username+"'s Photo Diary");
+            setTitle(username+"'s Piggy Bank");
+        } else {
+            setTitle("My Piggy Bank");
         }
         hour = prefs.getInt("hour",20);
         minute = prefs.getInt("minute",0);
 
         alarm_on();
+
+        //시작하자마자 오늘 데이터 띄우기
+        today = CalendarDay.today();
+        String ttoday = String.valueOf(today);
+        Log.d(ttoday, "오늘 생성됨");
+
+        String real_today = ttoday.substring(12,ttoday.length()-1);
+
+        String datearray[] = real_today.split("-");
+        int year = Integer.parseInt(datearray[0]);
+        int month = Integer.parseInt(datearray[1]);
+        int day = Integer.parseInt(datearray[2]);
+        String todayNew = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
+        Log.d(todayNew, "오늘 생성됨");
+
+        viewOrinsert(todayNew);
 
         materialCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
 
@@ -145,16 +177,54 @@ public class MainActivity extends AppCompatActivity {
                 Year = date.getYear();
                 Month = date.getMonth();
                 Day = date.getDay();
-                String date2 = String.valueOf(Year) + "/" + String.valueOf(Month) + "/" + String.valueOf(Day);
+                date2 = String.valueOf(Year) + "/" + String.valueOf(Month) + "/" + String.valueOf(Day);
 
                 materialCalendarView.clearSelection();
 
-                //viewOrinsert(date2);
-                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                startActivityForResult(intent,1);
+                viewOrinsert(date2);
             }
         });
         selectData(tablename);
+    }
+
+    class ListViewAdapter extends BaseAdapter {
+        ArrayList<ListItem> items = new ArrayList<ListItem>();
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        public void addItem(ListItem item){
+            items.add(item);
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) { //데이터 관리하는 어댑터가 화면에 보여질 각각의 아이템을 위한 뷰를 만듦 ->레이아웃으로 구성되어야
+            ListItemView view = null;
+            if (convertView == null) {
+                view = new ListItemView(getApplicationContext());
+            } else {
+                view = (ListItemView) convertView;
+            }
+
+            ListItem item = items.get(position);
+            view.setMoney(item.getMoney());
+            view.setTitle(item.getTitle());
+            view.setImage(item.getIcon());
+
+            return view;
+        }
     }
 
 
@@ -166,20 +236,91 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode){
                 case 1:
                     try {
-                        Intent resultIntent = getIntent();
+                        //Intent resultIntent = getIntent();
 
-                        title = resultIntent.getExtras().getString("title");
-                        type = resultIntent.getExtras().getString("type");
-                        money = resultIntent.getExtras().getInt("money");
+                        title = data.getExtras().getString("title");
+                        type = data.getExtras().getString("type");
+                        money = data.getExtras().getString("money");
+                        date = data.getExtras().getString("date");
+                        //intmoney = Integer.parseInt(money);
+                        Log.d(title + "/" + type + "/" + money, "생성됨");
 
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
             }
         }
+        insertData(title, type, money, date);
+
+        viewOrinsert(date);
     }
 
+    private void show(final int position)
+    {
+        ListItem item = (ListItem) adapter.getItem(position);
 
+        final List<String> ListItems = new ArrayList<>();
+        ListItems.add("항목 편집하기");
+        ListItems.add("항목 삭제하기");
+        final CharSequence[] items =  ListItems.toArray(new String[ ListItems.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(item.getTitle() + " " + item.getMoney() + "원");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int pos) {
+                String selectedText = items[pos].toString();
+                if (selectedText == "항목 편집하기"){
+                    reviseList(position);
+                }else{
+                    deleteList(position);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void deleteList(int position) {
+        ListItem item = (ListItem) adapter.getItem(position);
+
+        String str = item.getDate();
+
+        String sql = "DELETE FROM MoneyTable WHERE money = '"+item.getMoney()+"' and title = '"+item.getTitle()+"' and date = '"+item.getDate()+"'";
+        database.execSQL(sql);
+        Log.d(item.getDate(), "삭제 생성됨.");
+
+        viewOrinsert(str);
+    }
+
+    private void reviseList(int position) {
+        ListItem item = (ListItem) adapter.getItem(position);
+
+        String Rdate = item.getDate();
+        String Rtitle = item.getTitle();
+        String Rmoney = item.getMoney();
+        int Ricon = item.getIcon();
+
+        String ttype = "";
+        if (item.getIcon()==R.drawable.bus) {
+            ttype = "교통";
+        } else if (item.getIcon()==R.drawable.fork) {
+            ttype = "식비";
+        } else if (item.getIcon()==R.drawable.ticket) {
+            ttype = "문화";
+        }else if (item.getIcon()==R.drawable.supermarket) {
+            ttype = "쇼핑";
+        }else if (item.getIcon()==R.drawable.question) {
+            ttype = "기타";
+        }
+
+        deleteList(position);
+
+        Intent intent = new Intent(getApplicationContext(), ReviseActivity.class);
+        intent.putExtra("date", Rdate);
+        intent.putExtra("money", Rmoney);
+        intent.putExtra("title", Rtitle);
+        intent.putExtra("ttype", ttype);
+        startActivityForResult(intent,1);
+    }
 
     private void getUserName(){
         final EditText edittext = new EditText(this);
@@ -209,15 +350,16 @@ public class MainActivity extends AppCompatActivity {
     private void getDailyMoney(){
         final EditText edittext = new EditText(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("평소 하루에 쓰는 금액을 입력해주세요");
+        builder.setTitle("평소 하루에 쓰는 금액을 입력해주세요. (원)");
         //builder.setMessage("AlertDialog Content");
         builder.setView(edittext);
         builder.setPositiveButton("입력",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        endword = edittext.getText().toString();
+                        //정수만 입력하도록
+                        dailyMoney = edittext.getText().toString();
                         SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("endword",endword);
+                        editor.putString("dailymoney",dailyMoney);
                         editor.commit();
                     }
                 });
@@ -314,58 +456,65 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void viewOrinsert(final String string){
-        //Log.d("생성됨", string);
-        //String sql = "SELECT path, contents FROM photoDiary WHERE date = "+string;
-        String sql = "SELECT * FROM photoDiary WHERE date = '"+string+"'";
-        //String sql = "SELECT * FROM photoDiary WHERE date=" + string + ";";
+        String sql = "SELECT * FROM MoneyTable WHERE date = '"+string+"'";
         Cursor cursor = database.rawQuery(sql, null);
         Log.d("조회 생성됨", String.valueOf(cursor.getCount()));
 
-        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-        startActivityForResult(intent,1);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                intent.putExtra("date", string);
+                startActivityForResult(intent,1);
+            }
+        });
 
-        cursor.moveToNext();
-
-        final String title = cursor.getString(1);
-        final String type = cursor.getString(2);
-        final int money = Integer.parseInt(cursor.getString(3));
-        final String date = cursor.getString(4);
-
-        //textView.setText(string);
-
-        String datearray[] = date.split("/");
+        String datearray[] = string.split("/");
         int year = Integer.parseInt(datearray[0]);
         int month = Integer.parseInt(datearray[1]);
         int day = Integer.parseInt(datearray[2]);
         String dateNew = String.valueOf(year) + "/" + String.valueOf(month+1) + "/" + String.valueOf(day);
 
         textView.setText(dateNew);
-        //리스트뷰에 데이터 넣기
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                //intent.putExtra("endword",endword);
-                startActivityForResult(intent,1);
+        if (cursor.getCount()==0){
+            adapter = new ListViewAdapter();
+            listView.setAdapter(adapter);
+
+            adapter.addItem(new ListItem(R.drawable.white, "", "", string));
+            adapter.notifyDataSetChanged();
+        } else {
+            adapter = new ListViewAdapter();
+            listView.setAdapter(adapter);
+
+            for (int i=0; i<cursor.getCount(); i++) {
+                cursor.moveToNext();
+
+                final String title = cursor.getString(1);
+                final String type = cursor.getString(2);
+                final String money = cursor.getString(3);
+                final int intmoney = Integer.parseInt(money);
+                final String date = cursor.getString(4);
+                int icon=R.drawable.question;
+                Log.d(type, "타입 생성됨.");
+
+                if (type.equals("교통")) {
+                    icon = R.drawable.bus;
+                } else if (type.equals("식비")) {
+                    icon = R.drawable.fork;
+                } else if (type.equals("문화")) {
+                    icon = R.drawable.ticket;
+                }else if (type.equals("쇼핑")) {
+                    icon = R.drawable.supermarket;
+                }else if (type.equals("기타")) {
+                    icon = R.drawable.question;
+                }
+
+                //리스트뷰에 데이터 넣기
+                adapter.addItem(new ListItem(icon, money, title, date));
+                adapter.notifyDataSetChanged();
             }
-        });
-
-        button2.setOnClickListener(new View.OnClickListener() { //삭제 후 해당 날짜 다시 들어갔다가 나오면 삭제됐던 데이터가 복구되는 문제점
-            @Override
-            public void onClick(View v) {
-                String sql = "DELETE FROM photoDiary WHERE date = '"+string+"'";
-                database.execSQL(sql);
-                Log.d("삭제", "생성됨.");
-
-                materialCalendarView.removeDecorators();
-                materialCalendarView.addDecorators(
-                        new SundayDecorator(),
-                        new SaturdayDecorator(),
-                        oneDayDecorator);
-                selectData(tablename);
-            }
-        });
+        }
     }
 
     private void selectData(String tableName) {
@@ -378,7 +527,7 @@ public class MainActivity extends AppCompatActivity {
                 cursor.moveToNext();
                 String title = cursor.getString(0);
                 String type = cursor.getString(1);
-                int money = Integer.parseInt(cursor.getString(2));
+                int intmoney = Integer.parseInt(cursor.getString(2));
                 String date = cursor.getString(3);
 
                 //date 연월일로 분해
@@ -391,7 +540,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void insertData(String title, String type, int money, String date) {
+    private void insertData(String title, String type, String money, String date) {
 
         if (database != null){
             if (title != null && type != null) {
@@ -399,7 +548,7 @@ public class MainActivity extends AppCompatActivity {
                 Object[] params = {title, type, money, date};
                 database.execSQL(sql, params);
 
-                Log.d("데이터 추가(생성됨)", title + "/" + type + "/" + money);
+                Log.d("데이터 추가(생성됨)", title + "/" + type + "/" + money + "/" + date);
             } else {
                 //데이터 추가 실패
             }
@@ -412,15 +561,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (database != null) {
             database.execSQL("CREATE TABLE IF NOT EXISTS " + tableName
-                    + " (_id integer PRIMARY KEY autoincrement, title text, type text, money Integer, date text );");
-            Log.d("테이블", "생성됨.");
+                    + " (_id integer PRIMARY KEY autoincrement, title text, type text, money text, date text );");
+            Log.d(tableName, "테이블 생성됨.");
         } else {}
     }
 
     private void openDatabase(String databaseName) {
         database = openOrCreateDatabase(databaseName, MODE_PRIVATE, null);
         if (database != null){
-            Log.d("데이터베이스", "생성됨.");
+            Log.d(databaseName, "데이터베이스 생성됨.");
             createTable(tablename);
         }
     }

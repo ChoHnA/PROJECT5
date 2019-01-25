@@ -2,8 +2,8 @@ package com.helloandroid.project3_chatbot;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ChatActivity extends AppCompatActivity {
+public class ReviseActivity extends AppCompatActivity {
 
     EditText userInput_title;
     EditText userInput_money;
@@ -39,7 +39,25 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         date = intent.getExtras().getString("date");
-        Log.d(date, "챗봇 생성됨.");
+        money = intent.getExtras().getString("money");
+        title = intent.getExtras().getString("title");
+        type = intent.getExtras().getString("ttype");
+        Log.d(date, "수정봇 생성됨.");
+
+        //초기 설정
+        userInput_money.setText(money);
+        userInput_title.setText(title);
+        if(type.equals("교통")) {
+            back1.setVisibility(View.VISIBLE);
+        } else if(type.equals("식비")) {
+            back2.setVisibility(View.VISIBLE);
+        } else if(type.equals("문화")) {
+            back3.setVisibility(View.VISIBLE);
+        } else if(type.equals("쇼핑")) {
+            back4.setVisibility(View.VISIBLE);
+        } else if(type.equals("기타")) {
+            back5.setVisibility(View.VISIBLE);
+        }
 
         sortType();
 
