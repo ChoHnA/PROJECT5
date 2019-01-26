@@ -324,6 +324,13 @@ public class MainActivity extends AppCompatActivity {
         database.execSQL(sql);
         Log.d(item.getDate(), "삭제 생성됨.");
 
+        materialCalendarView.removeDecorators();
+        materialCalendarView.addDecorators(
+                new SundayDecorator(),
+                new SaturdayDecorator(),
+                oneDayDecorator);
+        selectData(tablename);
+
         viewOrinsert(str);
     }
 
@@ -547,12 +554,17 @@ public class MainActivity extends AppCompatActivity {
                 final String title = cursor.getString(1);
                 final String type = cursor.getString(2);
                 final String money = cursor.getString(3);
-                final int intmoney = Integer.parseInt(money);
+                int intmoney = 0;
                 final String date = cursor.getString(4);
                 int icon=R.drawable.question;
                 Log.d(type, "타입 생성됨.");
 
-                spendMoney = spendMoney + Integer.parseInt(money);
+                if(money.contains("+")) {
+                    intmoney = Integer.parseInt(money)*(-1);
+                } else {
+                    intmoney = Integer.parseInt(money);
+                }
+                spendMoney = spendMoney + intmoney;
 
                 if (type.equals("교통")) {
                     icon = R.drawable.bus;
@@ -577,13 +589,13 @@ public class MainActivity extends AppCompatActivity {
             if(((float)spendMoney/dailyintMoney)*100 < 70) {
                 Log.d("파란불 생성됨.", String.valueOf(((float)spendMoney/dailyintMoney)*100));
                 imageView.setImageResource(R.drawable.greenlight);
-                drawable = getResources().getDrawable(R.drawable.green2);
+                drawable = getResources().getDrawable(R.drawable.green4);
             } else if(((float)spendMoney/dailyintMoney)*100 > 100) {
                 imageView.setImageResource(R.drawable.redlight);
-                drawable = getResources().getDrawable(R.drawable.red2);
+                drawable = getResources().getDrawable(R.drawable.red4);
             } else {
                 imageView.setImageResource(R.drawable.yellowlight);
-                drawable = getResources().getDrawable(R.drawable.yellow2);
+                drawable = getResources().getDrawable(R.drawable.yellow4);
             }
 
             ArrayList<CalendarDay> dates = new ArrayList<>();
