@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView button;
     private int hour,minute;
     private CalendarDay today;
-    private String date2;
+    private String date2, todayNew;
     private int small, big;
     private int totalMoney, restMoney;
 
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         int year = Integer.parseInt(datearray[0]);
         int month = Integer.parseInt(datearray[1]);
         int day = Integer.parseInt(datearray[2]);
-        String todayNew = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
+        todayNew = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
         big = Integer.parseInt(String.valueOf(year) + String.valueOf(month+10) + String.valueOf(day+10));
         Log.d(todayNew, "오늘 생성됨");
 
@@ -218,6 +218,14 @@ public class MainActivity extends AppCompatActivity {
                 viewOrinsert(date2);
             }
         });
+        //selectData(tablename);
+        //viewOrinsert(todayNew);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         selectData(tablename);
         viewOrinsert(todayNew);
     }
@@ -287,6 +295,8 @@ public class MainActivity extends AppCompatActivity {
                     viewOrinsert(date);
 
                 case 2:
+                    break;
+                case 3:
                     break;
             }
         }
@@ -367,31 +377,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,1);
     }
 
-    private void getUserName(){
-        final EditText edittext = new EditText(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("당신은 누구인가요?");
-        //builder.setMessage("AlertDialog Content");
-        builder.setView(edittext);
-        builder.setPositiveButton("입력",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        username = edittext.getText().toString();
-                        setTitle(username+"'s Photo Diary");
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("username",username);
-                        editor.commit();
-                    }
-                });
-        builder.setNegativeButton("취소",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        builder.show();
-    }
-
     private void getDailyMoney(){
         final EditText edittext = new EditText(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -420,29 +405,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         builder.show();
-    }
-
-    private void getTime(){
-        TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int aaminute) {
-                // 설정버튼 눌렀을 때
-                hour = hourOfDay;
-                minute = aaminute;
-
-                Intent intent = new Intent();
-                PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
-                AlarmManager manager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-                manager.cancel(sender);
-                alarm_on();
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("hour",hour);
-                editor.putInt("minute",minute);
-                editor.commit();
-            }
-        };
-        TimePickerDialog dialog = new TimePickerDialog(this,listener,12,0,false);
-        dialog.show();
     }
 
     public final String[] EXTERNAL_PERMS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
@@ -502,7 +464,8 @@ public class MainActivity extends AppCompatActivity {
                 getDailyMoney();
                 return true;
             case R.id.set_time:
-                getTime();
+                Intent gintent = new Intent(getApplicationContext(), GraphActivity.class);
+                startActivityForResult(gintent,3);
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -693,13 +656,12 @@ public class MainActivity extends AppCompatActivity {
 
                 array_ymd[i] = ymd;
             }
+            small = array_ymd[0];
+            for(int j=1; j<array_ymd.length; j++){
+                small = (small < array_ymd[j]) ? small : array_ymd[j];
+            }
+            Log.d(String.valueOf(small), "첫날 생성됨.");
         }
-
-        small = array_ymd[0];
-        for(int j=1; j<array_ymd.length; j++){
-            small = (small < array_ymd[j]) ? small : array_ymd[j];
-        }
-        Log.d(String.valueOf(small), "첫날 생성됨.");
     }
 
     public void alarm_on(){
