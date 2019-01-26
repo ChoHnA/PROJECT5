@@ -14,7 +14,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/diary"
-        android:label="@string/app_name"
+        android:label="My Piggy Bank"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <uses-library
@@ -35,7 +35,7 @@
             android:resource="@array/preloaded_fonts" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".ReviseActivity" />
-        <activity android:name=".GraphActivity" />
+        <activity android:name=".GraphActivity"/>
         <activity
             android:name=".ImageSearchActivity"
             android:launchMode="singleTop"

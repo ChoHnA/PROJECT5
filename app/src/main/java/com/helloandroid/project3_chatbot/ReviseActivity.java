@@ -145,6 +145,17 @@ public class ReviseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("title",title);
+        resultIntent.putExtra("money", money);
+        resultIntent.putExtra("type", type);
+        resultIntent.putExtra("date", date);
+        setResult(RESULT_OK,resultIntent);
+        finish();
+    }
+
     /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

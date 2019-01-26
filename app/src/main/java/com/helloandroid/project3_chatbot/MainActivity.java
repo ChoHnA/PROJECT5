@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     String photopath;
     private String dailyMoney = "10000";
     private int dailyintMoney = 10000;
-    private String title, type, money, date;
+    private String title, type, money, date, back;
     //private int intmoney, icon;
 
     private TextView textView, textView3, textView4;
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private String date2, todayNew;
     private int small, big;
     private int totalMoney, restMoney;
+    private int money1, money2, money3, money4, money5;
 
     ListViewAdapter adapter;
     //PieChartView pieChartView;
@@ -218,17 +219,18 @@ public class MainActivity extends AppCompatActivity {
                 viewOrinsert(date2);
             }
         });
-        //selectData(tablename);
-        //viewOrinsert(todayNew);
+        selectData(tablename);
+        viewOrinsert(todayNew);
     }
 
+    /*
     @Override
     protected void onStart() {
         super.onStart();
 
         selectData(tablename);
-        viewOrinsert(todayNew);
     }
+    */
 
     class ListViewAdapter extends BaseAdapter {
         ArrayList<ListItem> items = new ArrayList<ListItem>();
@@ -292,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     insertData(title, type, money, date);
+                    selectData(tablename);
                     viewOrinsert(date);
 
                 case 2:
@@ -464,8 +467,7 @@ public class MainActivity extends AppCompatActivity {
                 getDailyMoney();
                 return true;
             case R.id.set_time:
-                Intent gintent = new Intent(getApplicationContext(), GraphActivity.class);
-                startActivityForResult(gintent,3);
+                statistics();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -598,6 +600,48 @@ public class MainActivity extends AppCompatActivity {
             }
             cursor.close();
         }
+    }
+
+    private void statistics() {
+        if (database != null){
+            String sql = "select title, type, money, date from " + tablename;
+            Cursor cursor = database.rawQuery(sql, null);
+            Log.d("통계 생성됨", String.valueOf(cursor.getCount()));
+
+            money1 = 0;
+            money2 = 0;
+            money3 = 0;
+            money4 = 0;
+            money5 = 0;
+
+            for (int i=0; i<cursor.getCount(); i++){
+                cursor.moveToNext();
+                int intmoney = Integer.parseInt(cursor.getString(2));
+                if((cursor.getString(2)).contains("+")) {
+                    intmoney = 0;
+                }
+
+                if((cursor.getString(1)).equals("교통")){
+                    money1 = money1 + intmoney;
+                } else if((cursor.getString(1)).equals("식비")){
+                    money2 = money2 + intmoney;
+                } else if((cursor.getString(1)).equals("문화")){
+                    money3 = money3 + intmoney;
+                } else if((cursor.getString(1)).equals("쇼핑")){
+                    money4 = money4 + intmoney;
+                } else if((cursor.getString(1)).equals("기타")){
+                    money5 = money5 + intmoney;
+                }
+            }
+            cursor.close();
+        }
+        Intent gintent = new Intent(getApplicationContext(), GraphActivity.class);
+        gintent.putExtra("교통", money1);
+        gintent.putExtra("식비", money2);
+        gintent.putExtra("문화", money3);
+        gintent.putExtra("쇼핑", money4);
+        gintent.putExtra("기타", money5);
+        startActivityForResult(gintent,3);
     }
 
     private void insertData(String title, String type, String money, String date) {
