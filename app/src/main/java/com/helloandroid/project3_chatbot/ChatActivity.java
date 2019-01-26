@@ -71,6 +71,17 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        //resultIntent.putExtra("title",title);
+        //resultIntent.putExtra("money", money);
+        //resultIntent.putExtra("type", type);
+        resultIntent.putExtra("date", date);
+        setResult(RESULT_OK,resultIntent);
+        finish();
+    }
+
     private void init() {
         userInput_title = (EditText) findViewById(R.id.userInput_title);
         userInput_money = (EditText) findViewById(R.id.userInput_money);

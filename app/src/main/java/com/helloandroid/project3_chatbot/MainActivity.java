@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     String photopath;
     private String dailyMoney = "10000";
-    private int dailyintMoney = 0;
+    private int dailyintMoney = 10000;
     private String title, type, money, date;
     //private int intmoney, icon;
 
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         String todayNew = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
         Log.d(todayNew, "오늘 생성됨");
 
-        viewOrinsert(todayNew);
+        //viewOrinsert(todayNew);
 
         materialCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
 
@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         selectData(tablename);
+        viewOrinsert(todayNew);
     }
 
     class ListViewAdapter extends BaseAdapter {
@@ -386,15 +387,14 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putInt("dailyintmoney",dailyintMoney);
                         editor.commit();
+
+                        selectData(tablename);
                     }
                 });
         builder.setNegativeButton("취소",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dailyintMoney = Integer.parseInt(dailyMoney);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt("dailyintmoney",dailyintMoney);
-                        editor.commit();
+
                     }
                 });
 
@@ -516,6 +516,10 @@ public class MainActivity extends AppCompatActivity {
             adapter = new ListViewAdapter();
             listView.setAdapter(adapter);
 
+            textView3.setText("0");
+            textView4.setText(String.valueOf(dailyintMoney));
+            imageView.setImageResource(R.drawable.greenlight);
+
             adapter.addItem(new ListItem(R.drawable.white, "", "", string));
             adapter.notifyDataSetChanged();
         } else {
@@ -551,10 +555,28 @@ public class MainActivity extends AppCompatActivity {
                 adapter.addItem(new ListItem(icon, money, title, date));
                 adapter.notifyDataSetChanged();
             }
+            Drawable drawable;
+            textView3.setText(String.valueOf(spendMoney));
+            textView4.setText(String.valueOf(dailyintMoney-spendMoney));
+
+            if(((float)spendMoney/dailyintMoney)*100 < 70) {
+                Log.d("파란불 생성됨.", String.valueOf(((float)spendMoney/dailyintMoney)*100));
+                imageView.setImageResource(R.drawable.greenlight);
+                drawable = getResources().getDrawable(R.drawable.green2);
+            } else if(((float)spendMoney/dailyintMoney)*100 > 100) {
+                imageView.setImageResource(R.drawable.redlight);
+                drawable = getResources().getDrawable(R.drawable.red2);
+            } else {
+                imageView.setImageResource(R.drawable.yellowlight);
+                drawable = getResources().getDrawable(R.drawable.yellow2);
+            }
+
+            ArrayList<CalendarDay> dates = new ArrayList<>();
+            dates.add(new CalendarDay(year,month,day));
+
+            materialCalendarView.addDecorator(new EventDecorator(drawable, dates,MainActivity.this));
         }
 
-        textView3.setText(String.valueOf(spendMoney));
-        textView4.setText(String.valueOf(dailyintMoney-spendMoney));
     }
 
 
@@ -566,16 +588,10 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i=0; i<cursor.getCount(); i++){
                 cursor.moveToNext();
-                String title = cursor.getString(0);
-                String type = cursor.getString(1);
                 int intmoney = Integer.parseInt(cursor.getString(2));
                 String date = cursor.getString(3);
 
-                //date 연월일로 분해
-                String datearray[] = date.split("/");
-                int year = Integer.parseInt(datearray[0]);
-                int month = Integer.parseInt(datearray[1]);
-                int day = Integer.parseInt(datearray[2]);
+                viewOrinsert(date);
             }
             cursor.close();
         }
@@ -591,7 +607,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("데이터 추가(생성됨)", title + "/" + type + "/" + money + "/" + date);
             } else {
-                //데이터 추가 실패
+                //
             }
         } else {
 
