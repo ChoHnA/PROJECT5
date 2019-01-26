@@ -4,11 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -52,15 +47,28 @@ public class PopupActivity extends Activity {
             txtText = (TextView)findViewById(R.id.txtText2);
             index = intent.getIntExtra("index", -1);
 
+            title = intent.getStringExtra("title");
+            price = intent.getStringExtra("price");
+            link = intent.getStringExtra("link");
+
+            txtText.setText(title + "\n" + price);
+            //txtText.setText();
+        }
+
+        else if(data.equals("buy"))
+        {
+
+            setContentView(R.layout.activity_popup2);
+            txtText = (TextView)findViewById(R.id.txtText2);
+            index = intent.getIntExtra("index", -1);
 
             title = intent.getStringExtra("title");
             price = intent.getStringExtra("price");
             link = intent.getStringExtra("link");
 
             txtText.setText(title + "\n" + price);
-
-
             //txtText.setText();
+
         }
 
 
@@ -92,18 +100,33 @@ public class PopupActivity extends Activity {
     }
 
     public void mDelete(View v){
+
+
         Intent intent = new Intent();
         intent.putExtra("result", "delete");
         intent.putExtra("title", title);
         intent.putExtra("index", index);
-
-
         setResult(RESULT_OK, intent);
+
 
         //액티비티(팝업) 닫기
         finish();
 
     }
+
+    public void mBuy(View v){
+        Intent intent = new Intent();
+
+        intent.putExtra("result", "buy");
+        intent.putExtra("price", price );
+        intent.putExtra("index", index);
+        setResult(RESULT_OK, intent);
+
+        finish();
+
+    }
+
+
 
     public void mLink(View v) {
 

@@ -54,7 +54,7 @@
 
         <Button
             android:id="@+id/cancel2"
-            android:layout_width="103dp"
+            android:layout_width="74dp"
             android:layout_height="match_parent"
             android:background="#00000000"
             android:gravity="center"
@@ -78,8 +78,21 @@
             android:textSize="15sp" />
 
         <Button
+            android:id="@+id/cancel3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:gravity="center"
+            android:onClick="mBuy"
+            android:padding="16dp"
+            android:text="구매"
+            android:textColor="#ff7a00"
+            android:textSize="15sp" />
+
+        <Button
             android:id="@+id/link"
-            android:layout_width="99dp"
+            android:layout_width="75dp"
             android:layout_height="match_parent"
             android:background="#00000000"
             android:gravity="center"

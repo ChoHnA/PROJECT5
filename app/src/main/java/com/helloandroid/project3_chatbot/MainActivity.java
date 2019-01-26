@@ -110,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
     ListViewAdapter adapter;
     //PieChartView pieChartView;
 
+    public int budget = 100000;
+
+    public void setBudget(int budget)
+    {
+        this.budget = budget;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -259,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
             // Make sure the request was successful
             switch (requestCode){
                 case 1:
+                    Log.i("??","????");
                     try {
                         //Intent resultIntent = getIntent();
 
@@ -272,11 +281,14 @@ public class MainActivity extends AppCompatActivity {
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
+                    insertData(title, type, money, date);
+                    viewOrinsert(date);
+                    
+                case 2:
+                    break;
             }
         }
-        insertData(title, type, money, date);
 
-        viewOrinsert(date);
     }
 
     private void show(final int position)
@@ -468,9 +480,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.set_user_name:
                 // User chose the "Settings" item, show the app settings UI...
 
-                Intent intent = new Intent(getApplicationContext(), SelectedList.class);
-                startActivity(intent);
 
+                Intent intent = new Intent(getApplicationContext(), SelectedList.class);
+
+                intent.putExtra("money",budget);
+                startActivity(intent);
+                startActivityForResult(intent, 1);
                 //getUserName();
                 return true;
 

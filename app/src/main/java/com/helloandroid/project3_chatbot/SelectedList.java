@@ -1,36 +1,32 @@
 package com.helloandroid.project3_chatbot;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 public class SelectedList extends AppCompatActivity {
 
     ListView listView;
 
+    public int money;
     FloatingActionButton button;
     private SQLiteDatabase database;
     private String databasename = "ItemDB";
     private String tablename = "ItemTable";
 
-
+    TextView budget;
 
     ArrayList<HashMap<String, String>> selectedItem = new ArrayList<>();
 
@@ -39,17 +35,15 @@ public class SelectedList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_list);
 
+        budget = findViewById(R.id.money);
+
         button = findViewById(R.id.addBtn);
-
         openDatabase(databasename);
-
         selectItemData(tablename);
-
         listView = findViewById(R.id.selectedlist);
 
-
-
-
+        Intent intent= getIntent();
+        money = intent.getIntExtra("money", 0);
 
     }
 
@@ -57,6 +51,11 @@ public class SelectedList extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        String mon = "잔고: " + String.valueOf(money)+ " 원";
+
+        budget.setText(mon);
+
         selectItemData(tablename);
         ListAdapter adapter = new ExtendedSimpleAdapter(
                 this, selectedItem,
@@ -90,7 +89,7 @@ public class SelectedList extends AppCompatActivity {
             intent.putExtra("index", i);
             startActivity(intent);
 
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, 2);
             /*
             String site = arrayList.get(i).get("link");
 
@@ -105,14 +104,15 @@ public class SelectedList extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 1) {
+        if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 //데이터 받기
                 String result = data.getStringExtra("result");
                 Log.i("result", result);
 
 
-                if(result.equals("delete")) {
+
+                if(result.equals("delete") || result.equals("buy")) {
 
                     String title = data.getStringExtra("title");
                     int index = data.getIntExtra("index", -1);
@@ -128,6 +128,21 @@ public class SelectedList extends AppCompatActivity {
                     listView.setAdapter(adapter);
                 }
 
+                if(result.equals("buy"))
+                {
+                    String price = data.getStringExtra("price");
+
+                    int item_price = Integer.parseInt(price);
+
+                    money -=item_price;
+                    String mon = "잔고: " + String.valueOf(money)+ " 원";
+
+                    MainActivity mainActivity = new MainActivity();
+                    mainActivity.setBudget(money);
+
+                    budget.setText(mon);
+                }
+
 
             }
         }
@@ -138,8 +153,7 @@ public class SelectedList extends AppCompatActivity {
     {
         Intent intent = new Intent(getApplicationContext(), ItemSearch.class);
         startActivity(intent);
-
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, 2);
 
     }
 
