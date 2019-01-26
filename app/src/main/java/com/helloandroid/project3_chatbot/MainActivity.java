@@ -571,6 +571,7 @@ public class MainActivity extends AppCompatActivity {
             materialCalendarView.addDecorator(new EventDecorator(drawable, dates,MainActivity.this));
         }
         restMoney = (big-small+1)*dailyintMoney - totalMoney;
+        budget = restMoney;
         Log.d(String.valueOf(restMoney), "남은 돈 생성됨.");
     }
 
@@ -605,6 +606,7 @@ public class MainActivity extends AppCompatActivity {
             if (title != null && type != null) {
                 String sql = "INSERT OR REPLACE INTO " + tablename + " (title, type, money, date) Values (?, ?, ?, ?);";
                 Object[] params = {title, type, money, date};
+
                 database.execSQL(sql, params);
 
                 Log.d("데이터 추가(생성됨)", title + "/" + type + "/" + money + "/" + date);
@@ -640,6 +642,15 @@ public class MainActivity extends AppCompatActivity {
         int[] array_ymd = new int[cursor.getCount()];
 
         if (cursor.getCount()==0){
+
+            String datearray[] = todayNew.split("/");
+            int year = Integer.parseInt(datearray[0]);
+            int month = Integer.parseInt(datearray[1]);
+            int day = Integer.parseInt(datearray[2]);
+            String ymdd = String.valueOf(year)+ String.valueOf(month+10) + String.valueOf(day+10);
+            int ymd = Integer.parseInt(ymdd);
+            small = ymd;
+
 
         } else {
             for (int i = 0; i < cursor.getCount(); i++) {

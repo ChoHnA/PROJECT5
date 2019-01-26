@@ -35,6 +35,14 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
     int[] to;
     Context context;
     LayoutInflater mInflater;
+
+    public int money;
+    public void getBudget(int budget)
+    {
+        this.money = budget;
+
+    }
+
     public ExtendedSimpleAdapter(Context context, List<? extends Map<String, ?>> data, // if fails to compile, do the same replacement as above on this line
                                  int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
@@ -59,6 +67,16 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
             v = mInflater.inflate(resource, parent, false);
         } else {
             v = convertView;
+        }
+
+        final Map dataSet = map.get(position);
+
+        if (dataSet != null) {
+            int price = Integer.parseInt((String) dataSet.get("price"));
+            if (price <= money) {
+                v.setBackgroundColor(Color.GREEN);
+            } else
+                v.setBackgroundColor(Color.WHITE);
         }
 
         this.bindView(position, v);

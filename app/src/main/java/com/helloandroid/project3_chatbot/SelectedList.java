@@ -62,6 +62,7 @@ public class SelectedList extends AppCompatActivity {
                 R.layout.selected_item, new String[]{"title", "price", "photo"},
                 new int[]{R.id.s_item, R.id.s_price, R.id.s_photo});
 
+        ((ExtendedSimpleAdapter) adapter).getBudget(money);
 
         listView.setAdapter(adapter);
 
@@ -110,37 +111,38 @@ public class SelectedList extends AppCompatActivity {
                 String result = data.getStringExtra("result");
                 Log.i("result", result);
 
-
-
                 if(result.equals("delete") || result.equals("buy")) {
 
                     String title = data.getStringExtra("title");
                     int index = data.getIntExtra("index", -1);
 
-                   selectedItem.remove(index);
+                    selectedItem.remove(index);
                     deleteData(title);
+
+
+                    if (result.equals("buy")) {
+                        String price = data.getStringExtra("price");
+
+                        int item_price = Integer.parseInt(price);
+
+                        money -= item_price;
+
+                        String mon = "잔고: " + String.valueOf(money) + " 원";
+
+                        MainActivity mainActivity = new MainActivity();
+                        mainActivity.setBudget(money);
+
+                        budget.setText(mon);
+
+                    }
 
                     ListAdapter adapter = new ExtendedSimpleAdapter(
                             this, selectedItem,
                             R.layout.selected_item, new String[]{"title", "price", "photo"},
                             new int[]{R.id.s_item, R.id.s_price, R.id.s_photo});
 
+                    ((ExtendedSimpleAdapter) adapter).getBudget(money);
                     listView.setAdapter(adapter);
-                }
-
-                if(result.equals("buy"))
-                {
-                    String price = data.getStringExtra("price");
-
-                    int item_price = Integer.parseInt(price);
-
-                    money -=item_price;
-                    String mon = "잔고: " + String.valueOf(money)+ " 원";
-
-                    MainActivity mainActivity = new MainActivity();
-                    mainActivity.setBudget(money);
-
-                    budget.setText(mon);
                 }
 
 
