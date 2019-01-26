@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
     private int hour,minute;
     private CalendarDay today;
     private String date2;
+    private int small, big;
+    private int totalMoney, restMoney;
 
     ListViewAdapter adapter;
     //PieChartView pieChartView;
@@ -184,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         int month = Integer.parseInt(datearray[1]);
         int day = Integer.parseInt(datearray[2]);
         String todayNew = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
+        big = Integer.parseInt(String.valueOf(year) + String.valueOf(month+10) + String.valueOf(day+10));
         Log.d(todayNew, "오늘 생성됨");
 
         //viewOrinsert(todayNew);
@@ -258,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
             return view;
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -513,7 +515,7 @@ public class MainActivity extends AppCompatActivity {
     private void viewOrinsert(final String string){
         String sql = "SELECT * FROM MoneyTable WHERE date = '"+string+"'";
         Cursor cursor = database.rawQuery(sql, null);
-        Log.d("조회 생성됨", String.valueOf(cursor.getCount()));
+        Log.d("조회 생성됨", string +"//"+ String.valueOf(cursor.getCount()));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -531,6 +533,8 @@ public class MainActivity extends AppCompatActivity {
         String dateNew = String.valueOf(year) + "/" + String.valueOf(month+1) + "/" + String.valueOf(day);
 
         textView.setText(dateNew);
+
+        countMoney();
 
         int spendMoney = 0;
 
@@ -557,7 +561,7 @@ public class MainActivity extends AppCompatActivity {
                 int intmoney = 0;
                 final String date = cursor.getString(4);
                 int icon=R.drawable.question;
-                Log.d(type, "타입 생성됨.");
+                Log.d(date, "타입 생성됨.");
 
                 if(money.contains("+")) {
                     intmoney = Integer.parseInt(money)*(-1);
@@ -603,7 +607,8 @@ public class MainActivity extends AppCompatActivity {
 
             materialCalendarView.addDecorator(new EventDecorator(drawable, dates,MainActivity.this));
         }
-
+        restMoney = (big-small+1)*dailyintMoney - totalMoney;
+        Log.d(String.valueOf(restMoney), "남은 돈 생성됨.");
     }
 
 
@@ -613,10 +618,17 @@ public class MainActivity extends AppCompatActivity {
             Cursor cursor = database.rawQuery(sql, null);
             Log.d("뿌리기 생성됨", String.valueOf(cursor.getCount()));
 
+            totalMoney = 0;
+
             for (int i=0; i<cursor.getCount(); i++){
                 cursor.moveToNext();
                 int intmoney = Integer.parseInt(cursor.getString(2));
                 String date = cursor.getString(3);
+
+                if((cursor.getString(2)).contains("+")) {
+                    intmoney = intmoney*(-1);
+                }
+                totalMoney = totalMoney + intmoney;
 
                 viewOrinsert(date);
             }
@@ -658,25 +670,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    private void openDatabase_item(String databaseName) {
-        itemdatabase = openOrCreateDatabase(databaseName, MODE_PRIVATE, null);
-        if (itemdatabase != null){
-            Log.d(databaseName, "데이터베이스 생성됨.");
-            createTable_item("ItemTable");
-        }
-    }
-    private void createTable_item(String tableName) {
+    private void countMoney(){
+        String sql = "SELECT date FROM MoneyTable";
+        Cursor cursor = database.rawQuery(sql, null);
 
-        if (itemdatabase != null) {
-            itemdatabase.execSQL("CREATE TABLE IF NOT EXISTS " + tableName
-                    + " (_id integer PRIMARY KEY autoincrement, title text, price text, photo text, date text, link text );");
-            Log.d("테이블", "생성됨.");
+        int[] array_ymd = new int[cursor.getCount()];
+
+        if (cursor.getCount()==0){
+
         } else {
-        }
-    }
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToNext();
 
-*/
+                final String date = cursor.getString(0);
+
+                String datearray[] = date.split("/");
+                int year = Integer.parseInt(datearray[0]);
+                int month = Integer.parseInt(datearray[1]);
+                int day = Integer.parseInt(datearray[2]);
+                String ymdd = String.valueOf(year)+ String.valueOf(month+10) + String.valueOf(day+10); //연월일 8자로 맞추기 위해
+                int ymd = Integer.parseInt(ymdd);
+
+                array_ymd[i] = ymd;
+            }
+        }
+
+        small = array_ymd[0];
+        for(int j=1; j<array_ymd.length; j++){
+            small = (small < array_ymd[j]) ? small : array_ymd[j];
+        }
+        Log.d(String.valueOf(small), "첫날 생성됨.");
+    }
 
     public void alarm_on(){
         // 알람 등록하기
