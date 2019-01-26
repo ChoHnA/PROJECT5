@@ -19,6 +19,9 @@
     <!-- Toast strings -->
     <string name="image_loading">Image is loading</string>
     <string name="error_loading">Error loading image</string>
+    <string name="title_activity_selected_list">SelectedList</string>
+    <string name="title_activity_popup">PopupActivity</string>
+    <string name="title_activity_item_search">ItemSearch</string>
 
 
 </resources>

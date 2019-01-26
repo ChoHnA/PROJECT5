@@ -65,6 +65,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -85,8 +86,12 @@ public class MainActivity extends AppCompatActivity {
     private int Year,Month,Day;
     public SharedPreferences prefs;
     private SQLiteDatabase database;
+    private SQLiteDatabase itemdatabase;
     private String databasename = "MyPiggyBank";
     private String tablename = "MoneyTable";
+
+    ArrayList<HashMap<String, String>> selecteditem = new ArrayList<>();
+
 
     String photopath;
     private String dailyMoney = "10000";
@@ -112,8 +117,10 @@ public class MainActivity extends AppCompatActivity {
 
         requestForPermission();
         //setTitle(username+"'s Photo Diary");
+        //SQLiteDatabase database1 = new SQLiteDatabase();
 
         openDatabase(databasename);
+
 
         textView = (TextView) findViewById(R.id.textView);
         textView3 = (TextView) findViewById(R.id.textView3);
@@ -460,7 +467,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.set_user_name:
                 // User chose the "Settings" item, show the app settings UI...
-                getUserName();
+
+                Intent intent = new Intent(getApplicationContext(), SelectedList.class);
+                startActivity(intent);
+
+                //getUserName();
                 return true;
 
             case R.id.set_end_word:
@@ -546,6 +557,7 @@ public class MainActivity extends AppCompatActivity {
         textView4.setText(String.valueOf(dailyintMoney-spendMoney));
     }
 
+
     private void selectData(String tableName) {
         if (database != null){
             String sql = "select title, type, money, date from " + tableName;
@@ -602,6 +614,26 @@ public class MainActivity extends AppCompatActivity {
             createTable(tablename);
         }
     }
+
+    /*
+    private void openDatabase_item(String databaseName) {
+        itemdatabase = openOrCreateDatabase(databaseName, MODE_PRIVATE, null);
+        if (itemdatabase != null){
+            Log.d(databaseName, "데이터베이스 생성됨.");
+            createTable_item("ItemTable");
+        }
+    }
+    private void createTable_item(String tableName) {
+
+        if (itemdatabase != null) {
+            itemdatabase.execSQL("CREATE TABLE IF NOT EXISTS " + tableName
+                    + " (_id integer PRIMARY KEY autoincrement, title text, price text, photo text, date text, link text );");
+            Log.d("테이블", "생성됨.");
+        } else {
+        }
+    }
+
+*/
 
     public void alarm_on(){
         // 알람 등록하기
