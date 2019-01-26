@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     insertData(title, type, money, date);
                     viewOrinsert(date);
-                    
+
                 case 2:
                     break;
             }

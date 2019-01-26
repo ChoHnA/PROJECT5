@@ -118,6 +118,7 @@ public class PopupActivity extends Activity {
         Intent intent = new Intent();
 
         intent.putExtra("result", "buy");
+        intent.putExtra("title", title);
         intent.putExtra("price", price );
         intent.putExtra("index", index);
         setResult(RESULT_OK, intent);
