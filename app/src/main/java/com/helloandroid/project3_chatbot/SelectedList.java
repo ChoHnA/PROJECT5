@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -145,19 +146,35 @@ public class SelectedList extends AppCompatActivity {
 
                 if(result.equals("delete") || result.equals("buy")) {
 
-                    String title = data.getStringExtra("title");
-                    int index = data.getIntExtra("index", -1);
 
-                    selectedItem.remove(index);
-                    deleteData(title);
+                    if(result.equals("delete"))
+                    {
+                        String title = data.getStringExtra("title");
+                        int index = data.getIntExtra("index", -1);
 
+                        selectedItem.remove(index);
+                        deleteData(title);
+                    }
 
                     if (result.equals("buy")) {
+
                         String price = data.getStringExtra("price");
 
                         int item_price = Integer.parseInt(price);
 
-                        money -= item_price;
+
+
+                        String title = data.getStringExtra("title");
+                        int index = data.getIntExtra("index", -1);
+
+                        if(money < item_price) {
+                            Toast.makeText(this, "돈이 부족합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            selectedItem.remove(index);
+                            deleteData(title);
+
+                            money -= item_price;
 
 
                         CalendarDay today = CalendarDay.today();
@@ -182,7 +199,7 @@ public class SelectedList extends AppCompatActivity {
                         intent.putExtra("date", date);
 
                         setResult(RESULT_OK, intent);
-
+                        }
 
                         String mon = "잔고: " + String.valueOf(money) + " 원";
 
