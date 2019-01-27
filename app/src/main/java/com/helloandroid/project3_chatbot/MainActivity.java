@@ -2,6 +2,7 @@ package com.helloandroid.project3_chatbot;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -146,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
         //앱 재실행했을 때 유지할 데이터
         SharedPreferences prefs = getSharedPreferences("pref", MODE_PRIVATE);
         dailyintMoney = prefs.getInt("dailyintmoney", 20000);
+        SharedPreferences prefs2 = getSharedPreferences("pref2", MODE_PRIVATE);
+        restMoney = prefs2.getInt("restmoney", 20000);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -166,12 +169,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         prefs = getSharedPreferences("data",Activity.MODE_PRIVATE);
-        username = prefs.getString("username",null);
-        if (username != null){
-            setTitle(username+"'s Piggy Bank");
-        } else {
-            setTitle("My Piggy Bank");
-        }
+
         hour = prefs.getInt("hour",20);
         minute = prefs.getInt("minute",0);
 
@@ -303,7 +301,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
     }
 
     private void show(final int position)
@@ -570,14 +574,14 @@ public class MainActivity extends AppCompatActivity {
 
             if(((float)spendMoney/dailyintMoney)*100 < 70) {
                 Log.d("파란불 생성됨.", String.valueOf(((float)spendMoney/dailyintMoney)*100));
-                imageView.setImageResource(R.drawable.greenlight);
-                drawable = getResources().getDrawable(R.drawable.green4);
+                imageView.setImageResource(R.drawable.greenlightt);
+                drawable = getResources().getDrawable(R.drawable.circlegreen);
             } else if(((float)spendMoney/dailyintMoney)*100 > 100) {
                 imageView.setImageResource(R.drawable.redlight);
-                drawable = getResources().getDrawable(R.drawable.red4);
+                drawable = getResources().getDrawable(R.drawable.circlered);
             } else {
                 imageView.setImageResource(R.drawable.yellowlight);
-                drawable = getResources().getDrawable(R.drawable.yellow4);
+                drawable = getResources().getDrawable(R.drawable.circleyellow);
             }
 
             ArrayList<CalendarDay> dates = new ArrayList<>();
@@ -588,6 +592,11 @@ public class MainActivity extends AppCompatActivity {
         restMoney = (big-small+1)*dailyintMoney - totalMoney;
         budget = restMoney;
         Log.d(String.valueOf(restMoney), "남은 돈 생성됨.");
+
+        SharedPreferences prefs2 = getSharedPreferences("pref2", MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = prefs2.edit();
+        editor2.putInt("restmoney",restMoney);
+        editor2.commit();
     }
 
 

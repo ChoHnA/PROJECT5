@@ -76,7 +76,7 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
             int price = Integer.parseInt((String) dataSet.get("price"));
             if (price <= money) {
                 //v.setBackgroundColor(Color.GREEN);
-                v.setBackgroundResource(R.color.color3);
+                v.setBackgroundResource(R.color.color2);
             } else
                 v.setBackgroundColor(Color.WHITE);
         }

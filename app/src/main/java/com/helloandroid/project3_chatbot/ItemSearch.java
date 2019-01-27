@@ -303,9 +303,9 @@ public class ItemSearch extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
             intent.putExtra("data", "add");
             intent.putExtra("index", i);
+            finish();
             startActivity(intent);
             startActivityForResult(intent, 1);
-
             /*
             Uri uri = Uri.parse(site);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);

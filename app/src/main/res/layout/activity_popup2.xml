@@ -15,7 +15,7 @@
             android:textSize="20sp"
             android:textColor="#fff"
             android:gravity="center"
-            android:background="#ff7a00"
+            android:background="#b0d6ff"
             android:layout_width="match_parent"
             android:layout_height="53dp" />
     </LinearLayout>
@@ -61,7 +61,7 @@
             android:onClick="mCancel"
             android:padding="16dp"
             android:text="취소"
-            android:textColor="#ff7a00"
+            android:textColor="#54c1cc"
             android:textSize="15sp" />
 
         <Button
@@ -74,7 +74,7 @@
             android:onClick="mDelete"
             android:padding="16dp"
             android:text="삭제"
-            android:textColor="#ff7a00"
+            android:textColor="#54c1cc"
             android:textSize="15sp" />
 
         <Button
@@ -87,7 +87,7 @@
             android:onClick="mBuy"
             android:padding="16dp"
             android:text="구매"
-            android:textColor="#ff7a00"
+            android:textColor="#54c1cc"
             android:textSize="15sp" />
 
         <Button
@@ -99,7 +99,7 @@
             android:onClick="mLink"
             android:padding="16dp"
             android:text="링크"
-            android:textColor="#ff7a00"
+            android:textColor="#54c1cc"
             android:textSize="15sp" />
 
     </LinearLayout>

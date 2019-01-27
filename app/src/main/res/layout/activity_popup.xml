@@ -15,7 +15,7 @@
             android:textSize="20sp"
             android:textColor="#fff"
             android:gravity="center"
-            android:background="#ff7a00"
+            android:background="#b0d6ff"
             android:layout_width="match_parent"
             android:layout_height="53dp" />
     </LinearLayout>
@@ -60,7 +60,7 @@
             android:onClick="mCancel"
             android:padding="16dp"
             android:text="취소"
-            android:textColor="#ff7a00"
+            android:textColor="#54c1cc"
             android:textSize="15sp" />
 
         <Button
@@ -72,7 +72,7 @@
             android:onClick="mAdd"
             android:padding="16dp"
             android:text="추가"
-            android:textColor="#ff7a00"
+            android:textColor="#54c1cc"
             android:textSize="15sp" />
 
     </LinearLayout>

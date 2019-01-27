@@ -14,7 +14,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/diary"
-        android:label="My Piggy Bank"
+        android:label="TMT BANK"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <uses-library
@@ -35,9 +35,18 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".ReviseActivity" />
-        <activity android:name=".GraphActivity" />
+        <activity
+            android:name=".ChatActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ReviseActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".GraphActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ImageSearchActivity"
             android:launchMode="singleTop"
@@ -80,7 +89,7 @@
             android:name=".SelectedList"
             android:label="@string/title_activity_selected_list"
             android:launchMode="singleInstance"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PopupActivity"
             android:label="@string/title_activity_popup"
@@ -88,7 +97,7 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".ItemSearch"
-            android:label="@string/title_activity_item_search"
+            android:label="ITEM SEARCH"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme" />
     </application>

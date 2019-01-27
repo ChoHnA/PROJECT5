@@ -199,6 +199,7 @@ public class SelectedList extends AppCompatActivity {
                         intent.putExtra("date", date);
 
                         setResult(RESULT_OK, intent);
+                        finish();
                         }
 
                         String mon = String.valueOf(money);
