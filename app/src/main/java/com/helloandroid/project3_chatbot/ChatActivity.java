@@ -134,7 +134,7 @@ public class ChatActivity extends AppCompatActivity {
                 finish();
             }
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "금액에는 숫자만 입력하세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "금액에는 숫자만 입력하세요.", Toast.LENGTH_SHORT).show();
         }
     }
 

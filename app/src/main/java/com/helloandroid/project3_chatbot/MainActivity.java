@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         if(path.mkdirs()){
             Log.e("FILE", "Directory not created");
         }else{
-            Toast.makeText(this, "카메라까지 50,000원", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "지금까지 " + restMoney + "원 모음.", Toast.LENGTH_SHORT).show();
         }
 
         prefs = getSharedPreferences("data",Activity.MODE_PRIVATE);

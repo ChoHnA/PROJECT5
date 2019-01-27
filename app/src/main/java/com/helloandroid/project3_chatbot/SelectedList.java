@@ -85,7 +85,7 @@ public class SelectedList extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        String mon = "잔고: " + String.valueOf(money)+ " 원";
+        String mon = String.valueOf(money);
 
         budget.setText(mon);
 
@@ -222,7 +222,7 @@ public class SelectedList extends AppCompatActivity {
                 if(result.equals("self")) {
                     //int i = data.getIntExtra("index",-1);
 
-                    Log.i("selfself","selfselfself");
+                    Log.i("selfself", "selfselfself");
                     long mNow;
                     Date mDate;
                     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy/MM/dd/hh/mm/ss");
@@ -235,10 +235,20 @@ public class SelectedList extends AppCompatActivity {
                     String photo = data.getStringExtra("photo");
                     String link = data.getStringExtra("link");
 
+                    if (!title.equals("") && !price.equals("") && isNumeric(price)) {
+                        insertData(title, price, photo, date, link);
+                        //selectItemData(databasename);
+                    }
 
-                    insertData(title, price, photo, date, link);
-                    //selectItemData(databasename);
+                    else if(!isNumeric(price))
+                    {
+                        Toast.makeText(this, "가격에는 숫자만 입력하세요.", Toast.LENGTH_SHORT).show();
+                    }
 
+                    else
+                    {
+                        Toast.makeText(this, "입력되지 않은 항목이 있습니다.", Toast.LENGTH_SHORT).show();
+                    }
                     ListAdapter adapter = new ExtendedSimpleAdapter(
                             this, selectedItem,
                             R.layout.selected_item, new String[]{"title", "price", "photo"},
@@ -246,15 +256,20 @@ public class SelectedList extends AppCompatActivity {
 
                     ((ExtendedSimpleAdapter) adapter).getBudget(money);
                     listView.setAdapter(adapter);
-
-
                 }
-
-
-
             }
         }
     }
+
+    public static boolean isNumeric(String strNum) {
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException | NullPointerException nfe) {
+            return false;
+        }
+        return true;
+    }
+
 
 
     public void addList(View v)
