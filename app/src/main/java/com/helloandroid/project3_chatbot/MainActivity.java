@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     String photopath;
-    private String dailyMoney = "10000";
-    private int dailyintMoney = 10000;
+    private String dailyMoney = "20000";
+    private int dailyintMoney = 20000;
     private String title, type, money, date, back;
     //private int intmoney, icon;
 
