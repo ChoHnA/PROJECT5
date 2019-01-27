@@ -12,6 +12,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,57 +127,21 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
                         // ifs since a lot of views are TextViews (e.g. CheckBoxes).
                         setViewText((TextView) v, text);
                     } else if (v instanceof ImageView) {
+
+
                         if (data instanceof Integer) {
                             setViewImage((ImageView) v, (Integer) data);
                         } else if (data instanceof Bitmap){
                             setViewImage((ImageView) v, (Bitmap)data);
-                        } else
-                            {
+                        } else {
 
-                                Picasso.with(this.context)
-                                        .load((String)data)
-                                        .into((ImageView)v);
-/*
-                            //string -> bitmap
+                            Log.i("data", (String) data);
+                            Picasso.with(this.context)
+                                    .load((String) data)
+                                    .placeholder(R.drawable.question)
+                                    .into((ImageView) v);
 
-                            Bitmap bitmap = new Bitmap();
-
-                            if(data != "Nophoto")
-                            {
-
-                                int idata = Integer.parseInt((String) data);
-                                Bitmap bitmap2 = queryContactImage((idata));
-                                //bitmap = queryContactImage((idata));
-
-                                //
-                                bitmap = getRoundedBitmap(bitmap2, 71);
-                                //bitmap = convertRoundedBitmap(bitmap);
-
-
-                                setViewImage((ImageView) v, bitmap2);
-
-
-                                // setViewImage((ImageView) v, text);
-                            }
-
-                            else
-                            {
-
-
-
-
-                                //bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.kakao);
-
-                            }
-
-                                bitmap = resizingBitmap(bitmap);
-
-                                bitmap = getRoundedBitmap(bitmap, 60);
-                                //bitmap = convertRoundedBitmap(bitmap);
-
-                                setViewImage((ImageView) v, bitmap);
-*/
-                            }
+                        }
 
 
                     } else {

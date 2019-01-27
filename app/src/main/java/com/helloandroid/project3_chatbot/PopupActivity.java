@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PopupActivity extends Activity {
 
@@ -15,6 +18,14 @@ public class PopupActivity extends Activity {
     String link;
     String title;
     String price;
+
+    EditText sTitle;
+    EditText sPrice;
+
+    String stitle;
+    String sprice;
+    String sphoto;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +37,9 @@ public class PopupActivity extends Activity {
         link = "";
         //UI 객체생성
         txtText = (TextView)findViewById(R.id.txtText);
+
+
+
 
         //데이터 가져오기
         Intent intent = getIntent();
@@ -71,6 +85,17 @@ public class PopupActivity extends Activity {
 
         }
 
+        else if(data.equals("self"))
+        {
+            setContentView(R.layout.activity_popup3);
+
+            sPrice = findViewById(R.id.sPrice);
+            sTitle = findViewById(R.id.sTitle);
+
+
+
+        }
+
 
     }
 
@@ -88,6 +113,32 @@ public class PopupActivity extends Activity {
         finish();
 
     }
+
+
+    public void mSelf(View v)
+    {
+
+        sprice = sPrice.getText().toString();
+        stitle = sTitle.getText().toString();
+        sphoto = "non";
+
+        Log.i("????","?????");
+        Intent intent = new Intent();
+        intent.putExtra("title", stitle);
+        intent.putExtra("price", sprice);
+        intent.putExtra("photo", sphoto);
+        intent.putExtra("link", "non");
+        intent.putExtra("result", "self");
+
+        Log.i("self", stitle + "/" + sprice + "/" + sphoto);
+
+        setResult(RESULT_OK, intent);
+
+        //액티비티(팝업) 닫기
+        finish();
+
+    }
+
 
     public void mAdd(View v){
         Intent intent = new Intent();
@@ -131,12 +182,18 @@ public class PopupActivity extends Activity {
 
     public void mLink(View v) {
 
+
         String site = link;
 
-        Uri uri = Uri.parse(site);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
+        if(!site.equals("non")) {
+            Uri uri = Uri.parse(site);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(this, "링크가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
 
+        }
         finish();
     }
 

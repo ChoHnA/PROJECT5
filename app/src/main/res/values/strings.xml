@@ -25,6 +25,7 @@
     <string name="title_activity_material_design_floating_action_menu">
         MaterialDesignFloatingActionMenu
     </string>
+    <string name="title_activity_additem_self">AdditemSelf</string>
 
 
 </resources>

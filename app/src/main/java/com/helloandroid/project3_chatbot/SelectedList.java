@@ -13,9 +13,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class SelectedList extends AppCompatActivity {
@@ -23,12 +26,16 @@ public class SelectedList extends AppCompatActivity {
     ListView listView;
 
     public int money;
-    FloatingActionButton button;
+
     private SQLiteDatabase database;
     private String databasename = "ItemDB";
     private String tablename = "ItemTable";
 
     TextView budget;
+
+    FloatingActionMenu materialDesignFAM;
+    com.github.clans.fab.FloatingActionButton button1, button2;
+
 
     ArrayList<HashMap<String, String>> selectedItem = new ArrayList<>();
 
@@ -39,10 +46,31 @@ public class SelectedList extends AppCompatActivity {
 
 
 
-        budget = findViewById(R.id.money);
+        materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
+        button1= (com.github.clans.fab.FloatingActionButton) findViewById(R.id.addBtn);
+        button2 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.selfBtn);
 
-        button = findViewById(R.id.addBtn);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                addList(v);
+
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu third item clicked
+                addSelf(v);
+
+            }
+        });
+
+        budget = findViewById(R.id.money);
         openDatabase(databasename);
+
+
+        //flushData();
+
         selectItemData(tablename);
         listView = findViewById(R.id.selectedlist);
 
@@ -174,6 +202,38 @@ public class SelectedList extends AppCompatActivity {
                     listView.setAdapter(adapter);
                 }
 
+                if(result.equals("self")) {
+                    //int i = data.getIntExtra("index",-1);
+
+                    Log.i("selfself","selfselfself");
+                    long mNow;
+                    Date mDate;
+                    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy/MM/dd/hh/mm/ss");
+                    mNow = System.currentTimeMillis();
+                    mDate = new Date(mNow);
+
+                    String date = mFormat.format(mDate);
+                    String title = data.getStringExtra("title");
+                    String price = data.getStringExtra("price");
+                    String photo = data.getStringExtra("photo");
+                    String link = data.getStringExtra("link");
+
+
+                    insertData(title, price, photo, date, link);
+                    //selectItemData(databasename);
+
+                    ListAdapter adapter = new ExtendedSimpleAdapter(
+                            this, selectedItem,
+                            R.layout.selected_item, new String[]{"title", "price", "photo"},
+                            new int[]{R.id.s_item, R.id.s_price, R.id.s_photo});
+
+                    ((ExtendedSimpleAdapter) adapter).getBudget(money);
+                    listView.setAdapter(adapter);
+
+
+                }
+
+
 
             }
         }
@@ -183,6 +243,17 @@ public class SelectedList extends AppCompatActivity {
     public void addList(View v)
     {
         Intent intent = new Intent(getApplicationContext(), ItemSearch.class);
+        startActivity(intent);
+        startActivityForResult(intent, 2);
+
+    }
+
+    public void addSelf(View v)
+    {
+        Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
+        intent.putExtra("data", "self");
+
+        Log.i("self","self");
         startActivity(intent);
         startActivityForResult(intent, 2);
 
@@ -226,6 +297,44 @@ public class SelectedList extends AppCompatActivity {
 
 
     }
+
+    private void insertData(String title, String price, String photo, String date, String link) {
+
+        if (database != null) {
+            if (title != null && price != null) {
+                String sql = "INSERT OR REPLACE INTO " + tablename + " (title, price, photo, date, link) Values (?, ?, ?, ?, ?);";
+                Object[] params = {title, price, photo, date, link};
+                database.execSQL(sql, params);
+
+                HashMap<String, String> item = new HashMap<>();
+                item.put("title", title);
+                item.put("price",price);
+                item.put("photo",photo);
+                item.put("link",link);
+
+                selectedItem.add(item);
+
+                Log.d("데이터 추가(생성됨)", title + " / " + price + " / " + photo + " // " + link);
+
+            } else {
+                //데이터 추가 실패
+            }
+        } else {
+
+        }
+    }
+
+    private void flushData()
+    {
+        if(database != null)
+        {
+            String sql = "delete from ItemTable";
+            database.execSQL(sql);
+
+        }
+
+    }
+
 
     private void deleteData(String title)
     {
