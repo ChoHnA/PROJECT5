@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,10 +22,12 @@ public class PopupActivity extends Activity {
 
     EditText sTitle;
     EditText sPrice;
+    EditText sMoney;
 
     String stitle;
     String sprice;
     String sphoto;
+    String smoney;
 
 
     @Override
@@ -96,7 +99,30 @@ public class PopupActivity extends Activity {
 
         }
 
+        else if(data.equals("money"))
+        {
+            setContentView(R.layout.activity_popup4);
 
+            sMoney = findViewById(R.id.sMoney);
+            Button button = (Button) findViewById(R.id.addself);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mMoney(v);
+                }
+            });
+
+            Button button2 = (Button) findViewById(R.id.cancelself);
+            button2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra("smoney", "none");
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+        }
     }
 
     //확인 버튼 클릭
@@ -194,6 +220,17 @@ public class PopupActivity extends Activity {
             Toast.makeText(this, "링크가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
 
         }
+        finish();
+    }
+
+
+    public void mMoney(View v) {
+
+        smoney = sMoney.getText().toString();
+
+        Intent intent = new Intent();
+        intent.putExtra("smoney", smoney);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

@@ -299,6 +299,23 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case 3:
                     break;
+                case 4:
+                    try {
+                        dailyMoney = data.getExtras().getString("smoney");
+                        if (dailyMoney.equals("none")){
+
+                        } else {
+                            dailyintMoney = Integer.parseInt(dailyMoney);
+                        }
+                        SharedPreferences prefs = getSharedPreferences("pref", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("dailyintmoney",dailyintMoney);
+                        editor.commit();
+
+                        selectData(tablename);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
         }
     }
@@ -385,6 +402,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDailyMoney(){
+        Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
+        intent.putExtra("data", "money");
+        startActivity(intent);
+        startActivityForResult(intent, 4);
+        /*
         final EditText edittext = new EditText(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("평소 하루에 쓰는 금액을 입력해주세요. (원)");
@@ -412,6 +434,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         builder.show();
+        */
     }
 
     public final String[] EXTERNAL_PERMS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
