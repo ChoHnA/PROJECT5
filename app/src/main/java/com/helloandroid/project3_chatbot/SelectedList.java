@@ -201,7 +201,7 @@ public class SelectedList extends AppCompatActivity {
                         setResult(RESULT_OK, intent);
                         }
 
-                        String mon = "잔고: " + String.valueOf(money) + " 원";
+                        String mon = String.valueOf(money);
 
                         MainActivity mainActivity = new MainActivity();
                         mainActivity.setBudget(money);

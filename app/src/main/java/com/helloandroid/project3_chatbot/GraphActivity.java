@@ -74,39 +74,46 @@ public class GraphActivity extends AppCompatActivity {
 
         pieChartView.setPieChartData(pieChartData);
 
-        ArrayList<String> arrayList = new ArrayList<String>();
-        arrayList.add(String.valueOf(type1));
-        arrayList.add(String.valueOf(type2));
-        arrayList.add(String.valueOf(type3));
-        arrayList.add(String.valueOf(type4));
-        arrayList.add(String.valueOf(type5));
+        int rank[] = new int[5];
+        rank[0] = type1;
+        rank[1] = type2;
+        rank[2] = type3;
+        rank[3] = type4;
+        rank[4] = type5;
 
-        Collections.sort(arrayList);
-        Collections.reverse(arrayList);
-
-        textView4.setText(arrayList.get(0));
-        textView5.setText(arrayList.get(1));
-        textView6.setText(arrayList.get(2));
-
-        ArrayList<String> arrList = new ArrayList<String>();
-
-        for (int i=0; i<3; i++) {
-            if(type1 == Integer.parseInt(arrayList.get(i))){
-                arrList.add("교통");
-            } else if(type2 == Integer.parseInt(arrayList.get(i))){
-                arrList.add("식비");
-            } else if(type3 == Integer.parseInt(arrayList.get(i))){
-                arrList.add("문화");
-            } else if(type4 == Integer.parseInt(arrayList.get(i))){
-                arrList.add("쇼핑");
-            } else if(type5 == Integer.parseInt(arrayList.get(i))){
-                arrList.add("기타");
+        for(int i=0; i<5; i++) {
+            for(int j=0; j<5; j++) {
+                if(rank[i]>rank[j]){
+                    int tmp = rank[i];
+                    rank[i] = rank[j];
+                    rank[j] = tmp;
+                }
             }
         }
 
-        textView1.setText(arrList.get(0));
-        textView2.setText(arrList.get(1));
-        textView3.setText(arrList.get(2));
+        textView4.setText(String.valueOf(rank[0]));
+        textView5.setText(String.valueOf(rank[1]));
+        textView6.setText(String.valueOf(rank[2]));
+
+        String srank[] = new String[3];
+
+        for (int i=0; i<3; i++) {
+            if(type1 == rank[i]){
+                srank[i] = "교통";
+            } else if(type2 == rank[i]){
+                srank[i] = "식비";
+            } else if(type3 == rank[i]){
+                srank[i] = "문화";
+            } else if(type4 == rank[i]){
+                srank[i] = "쇼핑";
+            } else if(type5 == rank[i]){
+                srank[i] = "기타";
+            }
+        }
+
+        textView1.setText(srank[0]);
+        textView2.setText(srank[1]);
+        textView3.setText(srank[2]);
     }
 
     @Override

@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     ListViewAdapter adapter;
     //PieChartView pieChartView;
 
-    public int budget = 100000;
+    public int budget = 10000;
 
     public void setBudget(int budget)
     {
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         //앱 재실행했을 때 유지할 데이터
         SharedPreferences prefs = getSharedPreferences("pref", MODE_PRIVATE);
-        dailyintMoney = prefs.getInt("dailyintmoney", 10000);
+        dailyintMoney = prefs.getInt("dailyintmoney", 20000);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -174,8 +174,6 @@ public class MainActivity extends AppCompatActivity {
         }
         hour = prefs.getInt("hour",20);
         minute = prefs.getInt("minute",0);
-
-        alarm_on();
 
         //시작하자마자 오늘 데이터 띄우기
         today = CalendarDay.today();
@@ -733,25 +731,4 @@ public class MainActivity extends AppCompatActivity {
             Log.d(String.valueOf(small), "첫날 생성됨.");
         }
     }
-
-    public void alarm_on(){
-        // 알람 등록하기
-        Log.i("alarm", "setAlarm");
-        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getApplicationContext(), Notification.class);   //AlarmReceive.class이클레스는 따로 만들꺼임 알람이 발동될때 동작하는 클레이스임
-
-        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-        Calendar calendar = Calendar.getInstance();
-        //알람시간 calendar에 set해주기
-
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour,minute);//시간을 10시 01분으로 일단 set했음
-        calendar.set(Calendar.SECOND, 0);
-
-        //알람 예약
-        //am.set(AlarmManager.RTC, calendar.getTimeInMillis(), sender);//이건 한번 알람
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24*60*60*1000, sender);//이건 여러번 알람 24*60*60*1000 이건 하루에한번 계속 알람한다는 뜻.
-        Toast.makeText(this,"시간설정:"+ Integer.toString(calendar.get(calendar.HOUR_OF_DAY))+":"+Integer.toString(calendar.get(calendar.MINUTE)),Toast.LENGTH_LONG).show();
-    }
-
 }

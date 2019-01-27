@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/money"
-        android:layout_width="270dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_margin="8dp"
         android:layout_marginStart="8dp"
