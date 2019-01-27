@@ -126,13 +126,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         requestForPermission();
         //setTitle(username+"'s Photo Diary");
         //SQLiteDatabase database1 = new SQLiteDatabase();
 
         openDatabase(databasename);
 
-
+        //flushData();
         textView = (TextView) findViewById(R.id.textView);
         textView3 = (TextView) findViewById(R.id.textView3);
         textView4 = (TextView) findViewById(R.id.textView4);
@@ -476,6 +478,19 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    private void flushData()
+    {
+        if(database != null)
+        {
+            String sql = "delete from MoneyTable";
+            database.execSQL(sql);
+
+        }
+
+    }
+
 
     private void viewOrinsert(final String string){
         String sql = "SELECT * FROM MoneyTable WHERE date = '"+string+"'";

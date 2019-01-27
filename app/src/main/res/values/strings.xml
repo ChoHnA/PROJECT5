@@ -22,6 +22,9 @@
     <string name="title_activity_selected_list">SelectedList</string>
     <string name="title_activity_popup">PopupActivity</string>
     <string name="title_activity_item_search">ItemSearch</string>
+    <string name="title_activity_material_design_floating_action_menu">
+        MaterialDesignFloatingActionMenu
+    </string>
 
 
 </resources>

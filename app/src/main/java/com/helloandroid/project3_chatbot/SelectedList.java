@@ -13,6 +13,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,6 +36,8 @@ public class SelectedList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_list);
+
+
 
         budget = findViewById(R.id.money);
 
@@ -127,6 +131,31 @@ public class SelectedList extends AppCompatActivity {
 
                         money -= item_price;
 
+
+                        CalendarDay today = CalendarDay.today();
+                        String ttoday = String.valueOf(today);
+                        Log.d(ttoday, "오늘 생성됨");
+
+                        String real_today = ttoday.substring(12,ttoday.length()-1);
+
+                        String datearray[] = real_today.split("-");
+                        int year = Integer.parseInt(datearray[0]);
+                        int month = Integer.parseInt(datearray[1]);
+                        int day = Integer.parseInt(datearray[2]);
+                        String todayNew = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
+
+
+                        String date = todayNew;
+
+                        Intent intent = new Intent();
+                        intent.putExtra("title", title);
+                        intent.putExtra("type", "기타");
+                        intent.putExtra("money", price);
+                        intent.putExtra("date", date);
+
+                        setResult(RESULT_OK, intent);
+
+
                         String mon = "잔고: " + String.valueOf(money) + " 원";
 
                         MainActivity mainActivity = new MainActivity();
@@ -208,6 +237,7 @@ public class SelectedList extends AppCompatActivity {
         }
 
     }
+
     private void createTable(String tableName) {
 
         if (database != null) {

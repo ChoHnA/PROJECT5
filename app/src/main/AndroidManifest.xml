@@ -21,8 +21,9 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".MainActivity"
-            android:launchMode = "singleInstance">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,9 +34,10 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
         <activity android:name=".ChatActivity" />
         <activity android:name=".ReviseActivity" />
-        <activity android:name=".GraphActivity"/>
+        <activity android:name=".GraphActivity" />
         <activity
             android:name=".ImageSearchActivity"
             android:launchMode="singleTop"
@@ -77,18 +79,18 @@
         <activity
             android:name=".SelectedList"
             android:label="@string/title_activity_selected_list"
-            android:theme="@style/AppTheme"
-            android:launchMode = "singleInstance"/>
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".PopupActivity"
             android:label="@string/title_activity_popup"
-            android:theme="@android:style/Theme.Dialog"
-            android:launchMode = "singleInstance"/>
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".ItemSearch"
             android:label="@string/title_activity_item_search"
-            android:theme="@style/AppTheme"
-            android:launchMode = "singleInstance"></activity>
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
