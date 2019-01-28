@@ -1,4 +1,4 @@
-package com.helloandroid.project3_chatbot;
+package com.helloandroid.project5;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,10 +29,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helloandroid.project3_chatbot.decorators.EventDecorator;
-import com.helloandroid.project3_chatbot.decorators.OneDayDecorator;
-import com.helloandroid.project3_chatbot.decorators.SaturdayDecorator;
-import com.helloandroid.project3_chatbot.decorators.SundayDecorator;
+import com.helloandroid.project5.decorators.EventDecorator;
+import com.helloandroid.project5.decorators.OneDayDecorator;
+import com.helloandroid.project5.decorators.SaturdayDecorator;
+import com.helloandroid.project5.decorators.SundayDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<HashMap<String, String>> selecteditem = new ArrayList<>();
 
 
-    String photopath;
+    String photopath2;
     private String dailyMoney = "20000";
     private int dailyintMoney = 20000;
     private String title, type, money, date, back;
@@ -128,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/MyPiggyBank");
-        photopath = path.getPath();
-        Log.e("file",photopath);
+        photopath2 = path.getPath();
+        Log.e("file",photopath2);
 
         if(path.mkdirs()){
             Log.e("FILE", "Directory not created");

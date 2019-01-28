@@ -1,15 +1,12 @@
-package com.helloandroid.project3_chatbot;
+package com.helloandroid.project5;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import lecho.lib.hellocharts.model.PieChartData;

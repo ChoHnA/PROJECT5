@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.helloandroid.project3_chatbot"
+    package="com.helloandroid.project5"
     android:appComponentFactory="whateverString"
     tools:replace="android:appComponentFactory">
 
@@ -22,7 +22,7 @@
             android:required="false" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.helloandroid.project5.MainActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,44 +36,21 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".ChatActivity"
+            android:name="com.helloandroid.project5.ChatActivity"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ReviseActivity"
+            android:name="com.helloandroid.project5.ReviseActivity"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".GraphActivity"
+            android:name="com.helloandroid.project5.GraphActivity"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme"/>
-        <activity
-            android:name=".ImageSearchActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-
-            <!-- The above the for search widget to display results in same activity -->
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-            <!-- For search widget -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <!-- For search widget -->
-        </activity>
-        <activity android:name=".ImageActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.imnobody.photosearch.fileprovider"
+            android:authorities="com.example.imnobody.tmtbank.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -81,22 +58,22 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name=".PopActivity" />
+        <activity android:name="com.helloandroid.project5.PopActivity" />
 
-        <receiver android:name=".Notification" />
+        <receiver android:name="com.helloandroid.project5.Notification" />
 
         <activity
-            android:name=".SelectedList"
+            android:name="com.helloandroid.project5.SelectedList"
             android:label="@string/title_activity_selected_list"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PopupActivity"
+            android:name="com.helloandroid.project5.PopupActivity"
             android:label="@string/title_activity_popup"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".ItemSearch"
+            android:name="com.helloandroid.project5.ItemSearch"
             android:label="ITEM SEARCH"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme" />

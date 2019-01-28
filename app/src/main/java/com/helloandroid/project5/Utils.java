@@ -1,4 +1,4 @@
-package com.helloandroid.project3_chatbot;
+package com.helloandroid.project5;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

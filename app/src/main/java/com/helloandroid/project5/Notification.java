@@ -1,4 +1,4 @@
-package com.helloandroid.project3_chatbot;
+package com.helloandroid.project5;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
