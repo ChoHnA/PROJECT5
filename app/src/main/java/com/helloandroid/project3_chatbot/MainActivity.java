@@ -2,51 +2,31 @@ package com.helloandroid.project3_chatbot;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.helloandroid.project3_chatbot.decorators.EventDecorator;
@@ -58,22 +38,11 @@ import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.Executors;
-
-import lecho.lib.hellocharts.model.PieChartData;
-import lecho.lib.hellocharts.model.SliceValue;
-import lecho.lib.hellocharts.view.PieChartView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -106,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView button;
     private int hour,minute;
     private CalendarDay today;
-    private String date2, todayNew;
+    private String date2, todayNew, thisMonth, thisYear;
     private int small, big;
     private int totalMoney, restMoney;
     private int money1, money2, money3, money4, money5;
@@ -184,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
         int year = Integer.parseInt(datearray[0]);
         int month = Integer.parseInt(datearray[1]);
         int day = Integer.parseInt(datearray[2]);
+        thisMonth = String.valueOf(Month);
+        thisYear = String.valueOf(Year + 2019);
         todayNew = String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day);
         big = Integer.parseInt(String.valueOf(year) + String.valueOf(month+10) + String.valueOf(day+10));
         Log.d(todayNew, "오늘 생성됨");
@@ -211,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
                 Month = date.getMonth();
                 Day = date.getDay();
                 date2 = String.valueOf(Year) + "/" + String.valueOf(Month) + "/" + String.valueOf(Day);
+
+                thisMonth = String.valueOf(Month);
+                thisYear = String.valueOf(Year);
 
                 materialCalendarView.clearSelection();
 
@@ -549,9 +523,9 @@ public class MainActivity extends AppCompatActivity {
 
             textView3.setText("0");
             textView4.setText(String.valueOf(dailyintMoney));
-            imageView.setImageResource(R.drawable.greenlight);
+            imageView.setImageResource(R.drawable.greenlightt);
 
-            adapter.addItem(new ListItem(R.drawable.white, "", "", string));
+            //adapter.addItem(new ListItem(R.drawable.white, "", "", string));
             adapter.notifyDataSetChanged();
         } else {
             adapter = new ListViewAdapter();
@@ -598,13 +572,13 @@ public class MainActivity extends AppCompatActivity {
             if(((float)spendMoney/dailyintMoney)*100 < 70) {
                 Log.d("파란불 생성됨.", String.valueOf(((float)spendMoney/dailyintMoney)*100));
                 imageView.setImageResource(R.drawable.greenlightt);
-                drawable = getResources().getDrawable(R.drawable.circlegreen);
+                drawable = getResources().getDrawable(R.drawable.coins);
             } else if(((float)spendMoney/dailyintMoney)*100 > 100) {
                 imageView.setImageResource(R.drawable.redlight);
-                drawable = getResources().getDrawable(R.drawable.circlered);
+                drawable = getResources().getDrawable(R.drawable.begging);
             } else {
                 imageView.setImageResource(R.drawable.yellowlight);
-                drawable = getResources().getDrawable(R.drawable.circleyellow);
+                drawable = getResources().getDrawable(R.drawable.notes);
             }
 
             ArrayList<CalendarDay> dates = new ArrayList<>();
@@ -649,9 +623,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void statistics() {
         if (database != null){
-            String sql = "select title, type, money, date from " + tablename;
-            Cursor cursor = database.rawQuery(sql, null);
-            Log.d("통계 생성됨", String.valueOf(cursor.getCount()));
 
             money1 = 0;
             money2 = 0;
@@ -659,28 +630,40 @@ public class MainActivity extends AppCompatActivity {
             money4 = 0;
             money5 = 0;
 
-            for (int i=0; i<cursor.getCount(); i++){
-                cursor.moveToNext();
-                int intmoney = Integer.parseInt(cursor.getString(2));
-                if((cursor.getString(2)).contains("+")) {
-                    intmoney = 0;
-                }
+            for(int j=1; j<32 ; j++){
+                String string = thisYear + "/" + thisMonth + "/" + String.valueOf(j);
+                String sql = "SELECT title, type, money, date FROM MoneyTable WHERE date = '"+string+"'";
+                Cursor cursor = database.rawQuery(sql, null);
 
-                if((cursor.getString(1)).equals("교통")){
-                    money1 = money1 + intmoney;
-                } else if((cursor.getString(1)).equals("식비")){
-                    money2 = money2 + intmoney;
-                } else if((cursor.getString(1)).equals("문화")){
-                    money3 = money3 + intmoney;
-                } else if((cursor.getString(1)).equals("쇼핑")){
-                    money4 = money4 + intmoney;
-                } else if((cursor.getString(1)).equals("기타")){
-                    money5 = money5 + intmoney;
+                if(cursor.getCount() == 0) {
+
+                } else {
+                    for (int i=0; i<cursor.getCount(); i++){
+                        cursor.moveToNext();
+                        int intmoney = Integer.parseInt(cursor.getString(2));
+                        if((cursor.getString(2)).contains("+")) {
+                            intmoney = 0;
+                        }
+
+                        if((cursor.getString(1)).equals("교통")){
+                            money1 = money1 + intmoney;
+                        } else if((cursor.getString(1)).equals("식비")){
+                            money2 = money2 + intmoney;
+                        } else if((cursor.getString(1)).equals("문화")){
+                            money3 = money3 + intmoney;
+                        } else if((cursor.getString(1)).equals("쇼핑")){
+                            money4 = money4 + intmoney;
+                        } else if((cursor.getString(1)).equals("기타")){
+                            money5 = money5 + intmoney;
+                        }
+                    }
                 }
+                cursor.close();
             }
-            cursor.close();
         }
         Intent gintent = new Intent(getApplicationContext(), GraphActivity.class);
+        gintent.putExtra("month", thisMonth);
+        gintent.putExtra("year", thisYear);
         gintent.putExtra("교통", money1);
         gintent.putExtra("식비", money2);
         gintent.putExtra("문화", money3);

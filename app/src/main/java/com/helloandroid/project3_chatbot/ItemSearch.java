@@ -303,7 +303,7 @@ public class ItemSearch extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
             intent.putExtra("data", "add");
             intent.putExtra("index", i);
-            finish();
+            //finish();
             startActivity(intent);
             startActivityForResult(intent, 1);
             /*

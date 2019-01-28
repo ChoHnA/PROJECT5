@@ -199,7 +199,7 @@ public class SelectedList extends AppCompatActivity {
                         intent.putExtra("date", date);
 
                         setResult(RESULT_OK, intent);
-                        finish();
+                        //finish();
                         }
 
                         String mon = String.valueOf(money);
@@ -236,13 +236,14 @@ public class SelectedList extends AppCompatActivity {
                     String photo = data.getStringExtra("photo");
                     String link = data.getStringExtra("link");
 
+
                     if (!title.equals("") && !price.equals("") && isNumeric(price)) {
                         insertData(title, price, photo, date, link);
                         //selectItemData(databasename);
                     }
-
                     else if(!isNumeric(price))
                     {
+                        Log.d("????",price);
                         Toast.makeText(this, "가격에는 숫자만 입력하세요.", Toast.LENGTH_SHORT).show();
                     }
 

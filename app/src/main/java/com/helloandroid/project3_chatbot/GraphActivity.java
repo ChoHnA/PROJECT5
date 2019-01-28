@@ -25,6 +25,9 @@ public class GraphActivity extends AppCompatActivity {
     private int type4 = 0;
     private int type5 = 0;
 
+    private String month = "";
+    private String year = "";
+
     TextView textView1;
     TextView textView2;
     TextView textView3;
@@ -56,6 +59,16 @@ public class GraphActivity extends AppCompatActivity {
         type3 = intent.getExtras().getInt("문화");
         type4 = intent.getExtras().getInt("쇼핑");
         type5 = intent.getExtras().getInt("기타");
+        month = intent.getExtras().getString("month");
+        year = intent.getExtras().getString("year");
+        int imonth = Integer.parseInt(month) + 1;
+        String smonth = String.valueOf(imonth);
+
+        if(imonth<10){
+            smonth = 0 + smonth;
+        }
+
+        setTitle(year + "년 " + smonth + "월 지출");
 
         Log.d(String.valueOf(type3), "그래프 문화 생성됨.");
 

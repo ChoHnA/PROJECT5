@@ -164,11 +164,12 @@ public class ChatActivity extends AppCompatActivity {
         image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "교통";
                 if(back1.isShown()==true) {
                     back1.setVisibility(View.INVISIBLE);
+                    type = "";
                 } else {
                     back1.setVisibility(View.VISIBLE);
+                    type = "교통";
                 }
                 back2.setVisibility(View.INVISIBLE);
                 back3.setVisibility(View.INVISIBLE);
@@ -179,11 +180,12 @@ public class ChatActivity extends AppCompatActivity {
         image1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "식비";
                 if(back2.isShown()==true) {
                     back2.setVisibility(View.INVISIBLE);
+                    type = "";
                 } else {
                     back2.setVisibility(View.VISIBLE);
+                    type = "식비";
                 }
                 back1.setVisibility(View.INVISIBLE);
                 back3.setVisibility(View.INVISIBLE);
@@ -194,11 +196,12 @@ public class ChatActivity extends AppCompatActivity {
         image3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "문화";
                 if(back3.isShown()==true) {
                     back3.setVisibility(View.INVISIBLE);
+                    type = "";
                 } else {
                     back3.setVisibility(View.VISIBLE);
+                    type = "문화";
                 }
                 back2.setVisibility(View.INVISIBLE);
                 back1.setVisibility(View.INVISIBLE);
@@ -209,11 +212,12 @@ public class ChatActivity extends AppCompatActivity {
         image4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "쇼핑";
                 if(back4.isShown()==true) {
                     back4.setVisibility(View.INVISIBLE);
+                    type = "";
                 } else {
                     back4.setVisibility(View.VISIBLE);
+                    type = "쇼핑";
                 }
                 back2.setVisibility(View.INVISIBLE);
                 back3.setVisibility(View.INVISIBLE);
@@ -224,11 +228,12 @@ public class ChatActivity extends AppCompatActivity {
         image5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "기타";
                 if(back5.isShown()==true) {
                     back5.setVisibility(View.INVISIBLE);
+                    type = "";
                 } else {
                     back5.setVisibility(View.VISIBLE);
+                    type = "기타";
                 }
                 back2.setVisibility(View.INVISIBLE);
                 back3.setVisibility(View.INVISIBLE);

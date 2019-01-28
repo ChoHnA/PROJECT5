@@ -60,10 +60,10 @@
             android:gravity="center"
             android:text="Price"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sPrice" />
+            app:layout_constraintTop_toBottomOf="@+id/sTitle" />
 
         <EditText
-            android:id="@+id/sPrice"
+            android:id="@+id/sTitle"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_alignTop="@+id/textView7"
@@ -82,7 +82,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/sTitle"
+            android:id="@+id/sPrice"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_alignTop="@+id/textView7"
@@ -97,7 +97,7 @@
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView7"
-            app:layout_constraintTop_toBottomOf="@+id/sPrice" />
+            app:layout_constraintTop_toBottomOf="@+id/sTitle" />
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
