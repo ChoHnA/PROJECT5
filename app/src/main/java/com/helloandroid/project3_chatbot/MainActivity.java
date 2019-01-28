@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
         big = Integer.parseInt(String.valueOf(year) + String.valueOf(month+10) + String.valueOf(day+10));
         Log.d(todayNew, "오늘 생성됨");
 
+        countMoney();
+
         //viewOrinsert(todayNew);
 
         materialCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
@@ -572,13 +574,13 @@ public class MainActivity extends AppCompatActivity {
             if(((float)spendMoney/dailyintMoney)*100 < 70) {
                 Log.d("파란불 생성됨.", String.valueOf(((float)spendMoney/dailyintMoney)*100));
                 imageView.setImageResource(R.drawable.greenlightt);
-                drawable = getResources().getDrawable(R.drawable.coins);
+                drawable = getResources().getDrawable(R.drawable.bank);
             } else if(((float)spendMoney/dailyintMoney)*100 > 100) {
                 imageView.setImageResource(R.drawable.redlight);
-                drawable = getResources().getDrawable(R.drawable.begging);
+                drawable = getResources().getDrawable(R.drawable.arrest);
             } else {
                 imageView.setImageResource(R.drawable.yellowlight);
-                drawable = getResources().getDrawable(R.drawable.notes);
+                drawable = getResources().getDrawable(R.drawable.coinss);
             }
 
             ArrayList<CalendarDay> dates = new ArrayList<>();
